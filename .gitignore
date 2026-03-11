@@ -1,0 +1,13 @@
+# Personal config (contains private info like assistant name, user name, paths)
+config.yaml
+config.yaml.backup
+
+# Local records
+提交记录.md
+
+# OS files
+.DS_Store
+
+# Test files
+*.test.md
+*.test.png
