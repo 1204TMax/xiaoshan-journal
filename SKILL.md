@@ -129,11 +129,21 @@ description: 个人日记自动化 skill。一键执行：自动检测配置 →
 - 高度自适应内容
 
 方案优先级：
-1. **Option A**: browser 截图（推荐）
-2. **Option B**: Chrome headless 截图
+1. **Option A**: Playwright（推荐，fullPage + deviceScaleFactor=2，清晰度高且高度自适应）
+2. **Option B**: Chrome headless 截图（force-device-scale-factor=2）
 3. **Option C**: Python PIL 绘制（最终兜底）
 
-每次截图后必须校验像素宽度；若不符，执行 `sips --resampleWidth <width>` 重采样后再次校验。
+Playwright 方案示例：
+```js
+const { chromium } = require('playwright');
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 540, height: 800 }, deviceScaleFactor: 2 });
+await page.goto('file:///<html_path>');
+await page.waitForLoadState('networkidle');
+await page.screenshot({ path: '<output_path>', fullPage: true });
+await browser.close();
+```
+截图后执行 `sips --resampleWidth <image_width>` 确保宽度精确，再用 `sips -g pixelWidth -g pixelHeight` 校验。
 
 输出：`<diary_text_dir>/diary-YYYY-MM-DD.png`
 
