@@ -154,7 +154,7 @@ const { chromium } = require('playwright');
 const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1080, height: 800 },
-  deviceScaleFactor: 3
+  deviceScaleFactor: 1
 });
 await page.goto('file:///<html_path>');
 await page.waitForLoadState('networkidle');
@@ -172,14 +172,15 @@ await browser.close();
   file://<html_path>
 ```
 
-#### 5.3 宽度校验与修正
+#### 5.3 宽度校验
 
-截图后必须执行：
+截图后校验宽度：
 ```bash
-sips --resampleWidth <image_width> <output_path>
 sips -g pixelWidth -g pixelHeight <output_path>
 ```
-确认宽度精确等于 `image_width`。若不符，重新 resample。
+确认宽度等于 `image_width`（1080）。DPR=1 + viewport=1080 时输出即为 1080px，无需 resample。
+
+⚠️ **禁止使用 DPR>1 再 resample 缩放**——缩放会导致文字模糊。直接 DPR=1 输出最清晰。
 
 输出：`<diary_text_dir>/diary-YYYY-MM-DD.png`
 
